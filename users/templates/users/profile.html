@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+</head>
+<body class="black-theme">
+    <div class="profile-container">
+        <form class="logout-link" action="{% url 'users:logout'%}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+        <h1>User Profile</h1>
+        <div class="profile-info">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Address:</strong> {{ user.address }}</p>
+            <p><strong>Payment Info:</strong> {{ user.payment_info|default:"Not provided" }}</p>
+        </div>
+
+        <div class="wishlist-section">
+            <div class="dropdown-container">
+                <div class="dropdown">
+                    <label for="add-wishlist">Add to Wishlist:</label>
+                    <select id="add-wishlist" name="product_to_add">
+                        {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button onclick="addToWishlist()">Add</button>
+                </div>
+
+                <div class="dropdown">
+                    <label for="remove-wishlist">Remove from Wishlist:</label>
+                    <select id="remove-wishlist" name="product_to_remove">
+                        {% for item in wishlist %}
+                            <option value="{{ item.product.id }}">{{ item.product.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button onclick="removeFromWishlist()">Remove</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addToWishlist() {
+            const productId = document.getElementById('add-wishlist').value;
+            fetch("{% url 'users:add_to_wishlist' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'product_id': productId })
+            }).then(response => location.reload());
+        }
+
+        function removeFromWishlist() {
+            const productId = document.getElementById('remove-wishlist').value;
+            fetch("{% url 'users:remove_from_wishlist' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'product_id': productId })
+            }).then(response => location.reload());
+        }
+    </script>
+</body>
+</html>
+ 

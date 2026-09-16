@@ -1,0 +1,25 @@
+body{
+    background: rgba(0, 0, 0, 0.892);
+    background-image: url(stars.png);
+    background-repeat: no-repeat;
+    color: #fff5ff;
+}
+
+body *{
+    font-family: Ubuntu;
+}
+
+h1,h2,h3,h4,h5{
+    font-weight: normal;
+    margin: 0;
+}
+
+a, a:hover, a:visited{
+    color: white;
+    text-decoration: none;
+}
+
+p{
+    max-width: 30rem;
+    word-wrap: break-word;
+}
