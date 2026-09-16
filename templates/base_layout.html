@@ -1,0 +1,40 @@
+<!-- python code to dynamically include static files from 'staticfiles' folder -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Document{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'autogen.css' %}">
+</head>
+<body>
+    <header class="wrapper">
+        
+
+        <nav>
+            <ul>
+                <!--if user is logged in then show logout, else show login and signup-->
+                {% if user.is_authenticated%}
+                    <li>
+                        <!-- this is for the logout button -->
+                        <form class="logout-link" action="{% url 'users:logout'%}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'users:login' %}">Login</a></li>
+                    <li><a href="{% url 'users:signup' %}">Signup</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <div class="wrapper">
+        {% block content %}
+        {% endblock %}
+    </div>
+    
+</body>
+</html>

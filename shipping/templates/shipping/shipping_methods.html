@@ -1,0 +1,191 @@
+{% comment %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Shipping Method</title>
+    <!-- Link the styles.css -->
+    <link rel="stylesheet" href="{% static 'shipping/styles.css' %}">
+</head>
+<body data-total-payment="{{ total_payment|floatformat:2 }}">
+    <div class="container">
+        <h1>Choose Your Shipping Method</h1>
+        <form id="shippingForm" method="POST" onsubmit="showThankYouMessage(event)">
+            {% csrf_token %}
+            
+            <label for="shippingMethods">Select Shipping Method:</label>
+            <select id="shippingMethods" name="shippingMethods" onchange="updateCharge()">
+                {% for method in methods %}
+                    <option value="{{ method.method }}" 
+                            data-charge="{{ method.charge }}" 
+                            data-delivery="{{ method.estimated_delivery_time }}">
+                        {{ method.get_method_display }} - ${{ method.charge }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <div class="details">
+                <!-- Shipping charge line has been removed -->
+                
+                <p>Estimated Delivery: <span id="estimatedDelivery">
+                    {% if methods %}
+                        {{ methods.0.estimated_delivery_time }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </span></p>
+
+                <p>Shipping charge: $<span id="finalTotal">
+                    {{ total_with_shipping }}
+                </span></p>
+            </div>
+
+            <div class="buttons">
+                <button type="submit">Back to Payment</button>
+            </div>
+   
+            <div class="buttons">
+                <button type="submit" id="confirmOrderButton">Confirm Your Order</button>
+            </div>
+        </form>
+
+        <!-- Hidden Thank You Message -->
+        <div id="thankYouMessage" style="display:none; margin-top: 20px; font-size: 18px; color: green;">
+            Thank you for your order!
+        </div>
+    </div>
+    
+    <script src="{% static 'shipping/script.js' %}"></script>
+    <script>
+        // Update the shipping charge, total, and estimated delivery time dynamically
+        function updateCharge() {
+            const shippingMethods = document.getElementById('shippingMethods');
+            const finalTotal = document.getElementById('finalTotal');
+            const estimatedDelivery = document.getElementById('estimatedDelivery');
+            
+            // Get the selected shipping method
+            const selectedOption = shippingMethods.options[shippingMethods.selectedIndex];
+            const charge = parseFloat(selectedOption.getAttribute('data-charge'));
+
+            // Retrieve the initial total payment value from a data attribute
+            const totalPayment = parseFloat(document.body.getAttribute('data-total-payment')) || 0.00;
+
+            // Handle edge case when totalPayment or charge is invalid
+            if (isNaN(charge) || isNaN(totalPayment)) {
+                finalTotal.textContent = '0.00';
+                estimatedDelivery.textContent = 'N/A';
+                return;
+            }
+
+            // Update the estimated delivery time
+            const deliveryTime = selectedOption.getAttribute('data-delivery');
+            estimatedDelivery.textContent = deliveryTime || 'N/A';
+
+            // Calculate and update the final total (total payment + shipping)
+            const finalAmount = totalPayment + charge;
+            finalTotal.textContent = finalAmount.toFixed(2);
+        }
+
+        // Function to show the "Thank You" message
+        function showThankYouMessage(event) {
+            // Prevent form submission for demonstration purposes (you can remove this if submitting the form is needed)
+            event.preventDefault();
+
+            // Display the Thank You message
+            const thankYouMessage = document.getElementById('thankYouMessage');
+            thankYouMessage.style.display = 'block';
+
+            // Optionally, you can hide the form or buttons after submission
+            const form = document.getElementById('shippingForm');
+            form.style.display = 'none';
+        }
+    </script>
+</body>
+</html> {% endcomment %}
+
+
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Shipping Method</title>
+  <link rel="stylesheet" href="{% static 'shipping/styles.css' %}">
+</head>
+<body
+  data-base-total="{{ base_total|floatformat:2 }}"
+  data-initial-shipping="{{ initial_shipping_charge|floatformat:2 }}"
+>
+  <div class="container">
+    <h1>Choose Your Shipping Method</h1>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <!-- We keep this for transparency; session carries the true value -->
+      <input type="hidden" name="order_id" value="{{ order_id }}">
+
+      <label for="shipping_method">Select Shipping Method:</label>
+      <select id="shipping_method" name="shipping_method" onchange="updateTotals()" required>
+        {% for method in methods %}
+          <option value="{{ method.id }}"
+                  data-charge="{{ method.charge }}"
+                  data-delivery="{{ method.estimated_delivery_time }}">
+            {{ method.get_method_display }} - ${{ method.charge }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <div class="details">
+        <p>Estimated Delivery: <span id="estimatedDelivery">
+          {% if methods %}
+            {{ methods.0.estimated_delivery_time }}
+          {% else %}
+            N/A
+          {% endif %}
+        </span></p>
+
+        <p>Total with Shipping: $ <span id="finalTotal">
+          {{ total_with_shipping|floatformat:2 }}
+        </span></p>
+      </div>
+
+      <div class="buttons">
+        <a href="/payment/" class="back-button">Back to Payment</a>
+        <button type="submit">Confirm Your Order</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function parseMoney(val) {
+      const n = parseFloat(val);
+      return isNaN(n) ? 0.0 : n;
+    }
+
+    function updateTotals() {
+      const baseTotal = parseMoney(document.body.getAttribute('data-base-total'));
+      const selectEl = document.getElementById('shipping_method');
+      const selected = selectEl.options[selectEl.selectedIndex];
+
+      const charge = parseMoney(selected.getAttribute('data-charge'));
+      const delivery = selected.getAttribute('data-delivery') || 'N/A';
+
+      const finalAmount = baseTotal + charge;
+
+      document.getElementById('finalTotal').textContent = finalAmount.toFixed(2);
+      document.getElementById('estimatedDelivery').textContent = delivery;
+    }
+
+    window.addEventListener('DOMContentLoaded', updateTotals);
+  </script>
+</body>
+</html>

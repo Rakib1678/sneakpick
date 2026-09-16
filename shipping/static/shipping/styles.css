@@ -1,0 +1,194 @@
+/* General styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000; /* Solid black background */
+    color: white;
+    min-height: 100vh; /* Ensure body takes full height */
+    padding: 20px; /* Add padding for mobile view */
+}
+
+/* Container styling */
+.container {
+    background-color: rgba(20, 20, 20, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    animation: fadeIn 1.5s ease-in;
+}
+
+/* Heading styling */
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #fff;
+    animation: textFadeIn 1.5s ease-out;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Label styling */
+label {
+    font-size: 1.1em;
+    color: #ccc;
+    animation: labelFadeIn 1s ease-out;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Select dropdown styling */
+select {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #fff;
+    font-size: 1em;
+    outline: none;
+    transition: all 0.3s ease;
+    animation: slideIn 1s ease-out;
+}
+
+/* Hover and focus effects for select dropdown */
+select:hover {
+    border-color: #1E90FF;
+    box-shadow: 0 0 12px rgba(30, 144, 255, 0.7);
+}
+
+select:focus {
+    border-color: #1E90FF;
+    box-shadow: 0 0 12px rgba(30, 144, 255, 0.9);
+}
+
+/* Price and delivery details styling */
+.details p {
+    font-size: 1.4em;
+    color: #fff;
+    margin: 10px 0;
+    animation: priceAnimation 1.5s ease-out;
+}
+
+.details span {
+    font-weight: bold;
+    color: #1E90FF;
+}
+
+/* Button styling */
+button {
+    padding: 12px 25px;
+    background-color: #28a745; /* Green color */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    animation: buttonAnimation 1s ease-out;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Button hover effect */
+button:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Button focus effect */
+button:focus {
+    outline: 2px solid #fff;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+}
+
+/* Button container styling */
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Added gap for vertical spacing */
+    justify-content: center;
+    align-items: center; /* Ensures buttons are centered */
+}
+
+/* Keyframes for animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes textFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes labelFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes priceAnimation {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes buttonAnimation {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            width: 95%;
+            height: 90vh;
+            border-radius: 10px;
+            background-color: #ffffffcc;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        .filter-form {
+            width: 22%;
+            padding: 20px;
+            background: #f8f9fa;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .filter-form h1 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .filter-form label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        .filter-form input {
+            width: 85%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 0.95rem;
+        }
+        .filter-form button {
+            padding: 12px;
+            width: 85%;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .filter-form button:hover {
+            background-color: #0056b3;
+        }
+        .product-list {
+            width: 78%;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .product-list li {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .product-list li:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .product-list img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            height: 150px;
+            object-fit: cover;
+        }
+        .product-list p {
+            margin: 5px 0;
+            font-size: 1rem;
+            color: #555;
+        }
+        .product-list p strong {
+            font-weight: bold;
+            color: #333;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: 100%;
+            }
+            .filter-form {
+                width: 100%;
+                padding: 15px;
+            }
+            .filter-form input, .filter-form button {
+                width: 95%;
+            }
+            .product-list {
+                width: 100%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form method="get" action="." class="filter-form">
+            <h1>Filter Products</h1>
+            <label for="brand">Brand:</label>
+            <input type="text" name="brand" id="brand" value="{{ request.GET.brand }}">
+            <label for="product_type">Product Type:</label>
+            <input type="text" name="product_type" id="product_type" value="{{ request.GET.product_type }}">
+            <label for="size">Size:</label>
+            <input type="text" name="size" id="size" value="{{ request.GET.size }}">
+            <label for="color">Color:</label>
+            <input type="text" name="color" id="color" value="{{ request.GET.color }}">
+            <label for="year_of_manufacture">Year of Manufacture:</label>
+            <input type="text" name="year_of_manufacture" id="year_of_manufacture" value="{{ request.GET.year_of_manufacture }}">
+            <label for="price">Price:</label>
+            <input type="text" name="price" id="price" value="{{ request.GET.price }}">
+            <label for="rating">Rating:</label>
+            <input type="text" name="rating" id="rating" value="{{ request.GET.rating }}">
+            <button type="submit">Filter</button>
+        </form>
+        <ul class="product-list">
+            {% for product in products %}
+           <li>
+    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    <p><strong>Name:</strong> {{ product.name }}</p>
+    <p><strong>Brand:</strong> {{ product.brand }}</p>
+    <p><strong>Type:</strong> {{ product.product_type }}</p>
+    <p><strong>Size:</strong> {{ product.size }}</p>
+    <p><strong>Color:</strong> {{ product.color }}</p>
+    <p><strong>Year:</strong> {{ product.year_of_manufacture }}</p>
+    <p><strong>Price:</strong> ${{ product.price }}</p>
+    <p><strong>Rating:</strong> {{ product.rating }}</p>
+
+    <!-- View Details -->
+    <a href="{% url 'products:product_detail' product.id %}" style="margin-top:10px; display:inline-block; color:#007bff; font-weight:bold;">
+        🔍 View Details
+    </a>
+
+    <!-- Add to Wishlist -->
+    <form method="post" action="{% url 'users:add_to_wishlist' %}" style="margin-top:10px;">
+        {% csrf_token %}
+    <form method="post" action="{% url 'users:add_to_wishlist' %}">
+    {% csrf_token %}
+
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <button type="submit" style="background:#ffcc00; border:none; padding:8px 12px; cursor:pointer; border-radius:5px;">
+            ⭐ Add to Wishlist
+        </button>
+    </form>
+
+    <!-- Add to Cart -->
+    
+    <form method="post" action="{% url 'cart:add_to_cart' %}">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <button type="submit" style="background:#28a745; color:#fff; border:none; padding:8px 12px; cursor:pointer; border-radius:5px;">
+            🛒 Add to Cart
+        </button>
+    </form>
+</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

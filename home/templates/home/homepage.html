@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SneakPick</title>
+    <style>
+        /* Base styles */
+        body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f8f8f8; }
+        header { background:#222; color:#fff; padding:20px; text-align:center; }
+        nav { background:#444; padding:10px; text-align:center; position:sticky; top:0; z-index:10; }
+        nav a { color:#fff; margin:0 15px; text-decoration:none; font-weight:bold; transition:color .2s ease; }
+        nav a:hover { color:#ffcc00; }
+
+        /* Hero section */
+        .hero {
+            background:url('https://source.unsplash.com/1600x400/?sneakers') no-repeat center;
+            background-size:cover;
+            color:#fff;
+            text-align:center;
+            padding:100px 20px;
+        }
+        .hero h1 { font-size:50px; margin:0; text-shadow:0 2px 6px rgba(0,0,0,.3); }
+        .hero p { font-size:20px; margin:10px 0 20px; text-shadow:0 1px 3px rgba(0,0,0,.3); }
+        .cta {
+            background:#ffcc00; padding:10px 20px; color:#000; text-decoration:none; font-weight:bold; border-radius:6px;
+            box-shadow:0 3px 10px rgba(0,0,0,.2); transition:transform .2s ease, box-shadow .2s ease;
+            display:inline-block;
+        }
+        .cta:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,.25); }
+
+        /* Sections and products */
+        .section { padding:40px 20px; text-align:center; max-width:1100px; margin:0 auto; }
+        .products { display:flex; flex-wrap:wrap; justify-content:center; gap:20px; }
+        .product {
+            background:#fff; border:1px solid #e6e6e6; padding:16px; width:220px; border-radius:10px;
+            box-shadow:0 2px 8px rgba(0,0,0,.06); transition:transform .2s ease, box-shadow .2s ease;
+        }
+        .product:hover { transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,.12); }
+        .product img { width:200px; height:200px; object-fit:cover; border-radius:8px; margin-bottom:10px; }
+        .product h3 { margin:8px 0 4px; font-size:18px; }
+        .product p { margin:0 0 10px; color:#444; }
+        .product a { color:#1a73e8; text-decoration:none; font-weight:bold; }
+        .product a:hover { text-decoration:underline; }
+
+        footer { background:#222; color:#fff; text-align:center; padding:20px; margin-top:40px; }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 800ms ease-out; }
+        .fade-in-delayed { animation: fadeIn 800ms ease-out 150ms both; }
+        .fade-in-late { animation: fadeIn 800ms ease-out 300ms both; }
+    </style>
+</head>
+<body>
+    <header class="fade-in">
+        <h1>SneakPick 👟</h1>
+        <p>Your one-stop sneaker shop</p>
+    </header>
+
+    <nav class="fade-in-delayed">
+        <a href="/products/">Products</a>
+        <a href="{% url 'cart:render_cart' %}">Cart</a>
+        <a href="/Orders/">Orders</a>
+        <a href="/promotions/">Promotions</a>
+        <a href="/shipping/">Shipping</a>
+        <a href="/payment/">Payment</a>
+        <a href="/users/profile/">Profile</a>
+        <a href="/users/signup/">Sign Up</a>
+        <a href="/users/login/">Login</a>
+    </nav>
+
+    <div class="hero fade-in">
+        <h1>Step Into Style</h1>
+        <p>Discover the latest sneakers and exclusive deals</p>
+        <a class="cta" href="/products/">Shop Now</a>
+    </div>
+
+    <div class="section fade-in-late">
+        <h2>Featured Products</h2>
+        <div class="products">
+            {% for product in featured %}
+                <div class="product">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="https://source.unsplash.com/200x200/?sneakers" alt="{{ product.name }}">
+                    {% endif %}
+                    <h3>{{ product.name }}</h3>
+                    <p>${{ product.price }}</p>
+                    <a href="{% url 'products:product_detail' product.id %}">View</a>
+                </div>
+            {% empty %}
+                <p>No products available yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer class="fade-in-late">
+        <p>&copy; 2025 SneakPick. All rights reserved.</p>
+    </footer>
+</body>
+</html>

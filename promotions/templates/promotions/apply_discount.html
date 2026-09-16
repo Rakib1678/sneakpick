@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply Discount Code</title>
+    <link rel="stylesheet" href="{% static 'promotions/promotion.css' %}">
+    <style>
+        .success-message {
+            color: green;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        /* Additional Styling for buttons */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            width: 48%;
+        }
+
+        .button-container button.back-to-cart {
+            background-color: #17a2b8; /* Blue */
+        }
+
+        .button-container button.proceed-to-payment {
+            background-color: #28a745; /* Green */
+        }
+
+        .button-container button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .button-container button:focus {
+            outline: 2px solid #fff;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Apply Discount</h1>
+        <form id="discountForm" onsubmit="applyDiscount(event)">
+            {% csrf_token %}
+            <label for="discountCode">Select Discount Code:</label>
+            <select id="discountCode" name="discount_code">
+                <option value="">-- Select Discount Code --</option>
+                {% for code in discount_codes %}
+                    <option value="{{ code.code }}">{{ code.code }} - {{ code.discount_percentage }}% Off</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Apply Discount</button>
+        </form>
+
+        <div id="messageContainer"></div>
+
+        <!-- Buttons for navigation -->
+        <div class="button-container">
+            <button class="back-to-cart" onclick="window.location.href='/cart/'">Back to Cart</button>
+            <button class="proceed-to-payment" onclick="window.location.href='/checkout/'">Proceed to Payment</button>
+        </div>
+    </div>
+
+    <script>
+        // Pass Django's discount codes to JavaScript
+        const discountMessages = {
+            {% for code in discount_codes %}
+            "{{ code.code }}": "{{ code.code }} - {{ code.discount_percentage }}% discount!",
+            {% endfor %}
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Page loaded. Ready to apply discounts.");
+        });
+
+        function applyDiscount(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const discountCode = document.getElementById('discountCode').value;
+            const messageContainer = document.getElementById('messageContainer'); // Target the message container
+
+            // Clear any previous message
+            messageContainer.innerHTML = "";
+
+            if (discountCode) {
+                // Show the success message without "Thank you!"
+                messageContainer.innerHTML = `
+                    <p class="success-message">${discountMessages[discountCode]}</p>
+                `;
+            } else {
+                // Show an error message
+                messageContainer.innerHTML = `
+                    <p class="error-message">Please select a valid discount code.</p>
+                `;
+            }
+        }
+    </script>
+    <script src="{% static 'promotions/promotion.js' %}"></script>
+</body>
+</html>

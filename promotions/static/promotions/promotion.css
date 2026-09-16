@@ -1,0 +1,142 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1e1e1e, #4a4a4a);
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Container Styling */
+.container {
+    background-color: rgba(20, 20, 20, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 100%;
+    max-width: 450px;
+    animation: fadeIn 1.5s ease-in;
+}
+
+/* Heading Styling */
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    animation: textFadeIn 1.5s ease-out;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Dropdown Styling */
+select {
+    width: 100%;
+    padding: 15px; /* Bigger padding for a larger box */
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #fff;
+    font-size: 1.2em; /* Increase font size for better readability */
+    outline: none;
+    animation: fadeIn 1s ease-in;
+    transition: all 0.3s ease;
+}
+
+select:hover {
+    border-color: #1E90FF;
+    box-shadow: 0 0 12px rgba(30, 144, 255, 0.7);
+}
+
+select:focus {
+    border-color: #1E90FF;
+    box-shadow: 0 0 12px rgba(30, 144, 255, 0.9);
+}
+
+/* Input Field Styling */
+input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #fff;
+    font-size: 1em;
+    outline: none;
+    animation: fadeIn 1s ease-in;
+    transition: all 0.3s ease;
+}
+
+input:hover {
+    border-color: #1E90FF;
+    box-shadow: 0 0 12px rgba(30, 144, 255, 0.7);
+}
+
+input:focus {
+    border-color: #1E90FF;
+    box-shadow: 0 0 12px rgba(30, 144, 255, 0.9);
+}
+
+/* Button Styling */
+button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #28a745;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    animation: fadeIn 1s ease-in;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background-color: #218838;
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+button:focus {
+    outline: 2px solid #fff;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes textFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

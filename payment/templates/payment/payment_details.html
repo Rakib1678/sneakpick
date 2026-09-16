@@ -1,0 +1,68 @@
+{% comment %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Details</title>
+  <link rel="stylesheet" href="{% static 'payment/popup.css' %}">
+</head>
+<body>
+  <div class="popup-container">
+    <div class="popup">
+      <h2>Enter Your Payment Details</h2>
+      <form id="paymentForm" method="POST" action="{% url 'payment_details' %}">
+        {% csrf_token %}
+        <label for="account-number">Account Number:</label>
+        <input type="text" id="account-number" name="account_number" placeholder="Enter account number" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+        <div class="buttons">
+          <button type="submit" class="confirm-btn">Confirm</button>
+          <button type="button" class="cancel-btn" id="close-btn" onclick="window.close()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="{% static 'popup.js' %}"></script>
+</body>
+</html> {% endcomment %}
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Details</title>
+  <link rel="stylesheet" href="{% static 'payment/popup.css' %}">
+</head>
+<body>
+  <div class="popup-container">
+    <div class="popup">
+      <h2>Enter Your Payment Details</h2>
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="order_id" value="{{ order_id }}">
+        <input type="hidden" name="amount" value="{{ amount }}">
+        <input type="hidden" name="payment_method" value="{{ payment_method }}">
+
+        <label for="account_number">Account Number:</label>
+        <input type="text" id="account_number" name="account_number" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Confirm Payment</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="{% static 'popup.js' %}"></script>
+</body>
+</html>

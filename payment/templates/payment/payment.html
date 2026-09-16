@@ -1,0 +1,129 @@
+{% comment %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'payment/payment.css' %}">
+</head>
+<body>
+  <div class="background-container">
+    <img src="img/free-photo-of-person-wearing-black-pants-and-vans-shoes.jpeg" alt="Shoe Background" class="background-image">
+    <div class="checkout-container">
+      <div class="navigation-bar">
+        <button class="back-to-cart-btn" onclick="goToCart()">Back to Cart</button>
+      </div>
+      <h1>Select Your Payment Method</h1>
+      <div class="payment-grid">
+        <!-- Repeat this block for each payment method -->
+        <div class="payment-card" data-payment="Bank Transfer" onclick="openPopup('Bank Transfer')">
+          <img src="img/download.png" alt="Bank Transfer">
+          <span>Bank Transfer</span>
+        </div>
+        <!-- Add other payment cards similarly -->
+      </div>
+      <div class="selected-method">No payment method selected yet.</div>
+      <button class="proceed-btn">Proceed to Shipping</button>
+    </div>
+  </div>
+
+  <script>
+    function goToCart() {
+      window.location.href = 'cart.html';
+    }
+
+    function openPopup(paymentMethod) {
+      const width = 400;
+      const height = 400;
+      const left = (window.screen.width / 2) - (width / 2);
+      const top = (window.screen.height / 2) - (height / 2);
+
+      if (
+        paymentMethod === "Bank Transfer" ||
+        paymentMethod === "PayPal" ||
+        paymentMethod === "bKash" ||
+        paymentMethod === "Rocket" ||
+        paymentMethod === "Apple Pay" ||
+        paymentMethod === "Google Pay" ||
+        paymentMethod === "Master Card" ||
+        paymentMethod === "Nagad"
+      ) {
+        const popup = window.open(
+          '{% url "payment_details" %}',
+          '_blank',
+          `width=${width},height=${height},left=${left},top=${top}`
+        );
+        if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+          alert('Popup blocked. Please allow popups for this site.');
+        }
+      } else {
+        document.querySelector('.selected-method').innerText = `You selected: ${paymentMethod}`;
+      }
+    }
+  </script>
+</body>
+</html> {% endcomment %}
+
+
+
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'payment/payment.css' %}">
+</head>
+<body>
+  <div class="background-container">
+    <img src="{% static 'img/free-photo-of-person-wearing-black-pants-and-vans-shoes.jpeg' %}" alt="Shoe Background" class="background-image">
+    <div class="checkout-container">
+      <div class="navigation-bar">
+        <button class="back-to-cart-btn" onclick="goToCart()">Back to Cart</button>
+      </div>
+      <h1>Select Your Payment Method</h1>
+      <div class="payment-grid">
+        <div class="payment-card" data-payment="Bank Transfer" onclick="openPopup('Bank Transfer')">
+          <img src="{% static 'img/download.png' %}" alt="Bank Transfer">
+          <span>Bank Transfer</span>
+        </div>
+      </div>
+      <div class="selected-method">No payment method selected yet.</div>
+      <button class="proceed-btn">Proceed to Shipping</button>
+    </div>
+  </div>
+
+  <script>
+    function goToCart() {
+      window.location.href = '{% url "cart:render_cart" %}';
+    }
+
+    function openPopup(paymentMethod) {
+      const width = 400;
+      const height = 400;
+      const left = (window.screen.width / 2) - (width / 2);
+      const top = (window.screen.height / 2) - (height / 2);
+
+      const orderId = "{{ order.id|default:'' }}";
+      const amount = "{{ order.total_amount|default:'' }}";
+
+      const popup = window.open(
+        `{% url 'payment_details' %}?order_id=${orderId}&payment_method=${encodeURIComponent(paymentMethod)}&amount=${amount}`,
+        '_blank',
+        `width=${width},height=${height},left=${left},top=${top}`
+      );
+
+      if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+        alert('Popup blocked. Please allow popups for this site.');
+      }
+    }
+  </script>
+</body>
+</html>
